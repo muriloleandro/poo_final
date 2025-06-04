@@ -53,7 +53,7 @@ class Scraper:
                 err = self.scrape_cursos(unidade)
 
             # salvar como backup
-            with open(f"backup/unidade_{i}.json", "w", encoding="utf-8") as f:
+            with open(f"json/parts/unidade_{i}.json", "w", encoding="utf-8") as f:
                 json.dump(unidade.to_dict(), f, ensure_ascii=False, indent=4)
             
     def acessar_pag_inicial(self):
