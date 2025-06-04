@@ -1,0 +1,3 @@
+*.mp4
+src/__pycache__/*
+json/parts/*.json
