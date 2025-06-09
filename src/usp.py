@@ -2,10 +2,10 @@ class Unidade:
     def __init__(self, nome):
         self.nome = nome
         self.cursos = []
-    
+
     def __str__(self):
         return f"Unidade: {self.nome}"
-    
+
     def add_curso(self, curso):
         self.cursos.append(curso)
 

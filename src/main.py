@@ -2,19 +2,23 @@ import json
 from scraper import Scraper
 from usp import *
 from aux import jsonlista2unidades
+from sys import argv
 
-def preencher_dados():
+def preencher_dados(n_unidades):
     resposta = ''
     while resposta != '1' and resposta != '2':
-        print("1: Fazer scrape de todos os dados no júpiter web")
+        if n_unidades:
+            print(f"1: Fazer scrape de {n_unidades-1} dados no júpiter web")
+        else:
+            print("1: Fazer scrape de todos os dados no júpiter web")
         print("2: Carregar dados em 'json/USP.json'")
         resposta = input("Escolha sua opção (1/2): ")
-    
+
     print()
 
     if resposta == '1':
         scraper = Scraper(headless=True)
-        scraper.scrape_tudo()
+        scraper.scrape_tudo(n_unidades)
         lista_dict = [unidade.to_dict() for unidade in scraper.unidades]
         with open("json/USP.json", "w", encoding="utf-8") as f:
             print("Salvando arquivo em 'json/USP.json'")
@@ -119,7 +123,7 @@ def dados_todos_cursos(unidades):
             print(f"  Total de disciplinas optativas livres: {total_opt_livres}")
             print(f"  Total de disciplinas optativas eletivas: {total_opt_elet}")
             print("-" * 50)
-    
+
     print()
 
 
@@ -226,22 +230,30 @@ def mostrar_menu():
 
 
 if __name__ == "__main__":
-    unidades = preencher_dados()
+    try:
+        n_unidades = int(argv[1])+1 if len(argv)>1 else None;
+    except ValueError:
+        n_unidades = None;
+
+    unidades = preencher_dados(n_unidades)
+    opcoes = {
+        1: curso_por_unidade,
+        2: dados_curso,
+        3: dados_todos_cursos,
+        4: dados_disciplina,
+        5: disciplinas_multiplos_cursos
+    }
 
     while True:
         mostrar_menu()
-        opcao = input("Escolha sua opção (1-6): ").strip()
-        if opcao == '1':
-            curso_por_unidade(unidades)
-        elif opcao == '2':
-            dados_curso(unidades)
-        elif opcao == '3':
-            dados_todos_cursos(unidades)
-        elif opcao == '4':
-            dados_disciplina(unidades)
-        elif opcao == '5':
-            disciplinas_multiplos_cursos(unidades)
-        elif opcao == '6':
+        try:
+            opcao = int(input("Escolha sua opção (1-6): ").strip())
+        except ValueError:
+            print("Opção inválida. Tente novamente.")
+
+        if 1<=opcao<=5:
+            opcoes[opcao](unidades);
+        elif opcao==6:
             print("\nEncerrando o programa. Até mais!")
             break
         else:

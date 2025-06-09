@@ -32,9 +32,9 @@ class Scraper:
             options.add_experimental_option('useAutomationExtension', False)
         self.driver = webdriver.Chrome(options=options)
 
-    def scrape_tudo(self):
+    def scrape_tudo(self, n_unidades):
         print("Fazendo scraping das unidades...")
-        self.scrape_unidades()
+        self.scrape_unidades(n_unidades)
 
         for i, unidade in enumerate(self.unidades):
             print(f"Fazendo scraping de: {unidade}")
@@ -55,24 +55,30 @@ class Scraper:
             # salvar como backup
             with open(f"json/parts/unidade_{i}.json", "w", encoding="utf-8") as f:
                 json.dump(unidade.to_dict(), f, ensure_ascii=False, indent=4)
-            
+
     def acessar_pag_inicial(self):
         self.driver.get(self.BASE_URL)
-        try: 
+        try:
             WebDriverWait(self.driver, 15).until(
                 lambda driver: len(driver.find_elements(By.TAG_NAME, "option"))>2
             )
         except Exception as e:
             print(f"Não acessou nem a página inicial kkkkkk")
 
-    def scrape_unidades(self):
+    def scrape_unidades(self, n_unidades):
         #acessar url
         self.acessar_pag_inicial()
 
         # obter lista de unidades pelo dropdown menu
         unidade_dropdown_element = self.driver.find_element(By.ID, "comboUnidade")
         unidade_select = Select(unidade_dropdown_element)
-        for option in unidade_select.options:
+
+        if n_unidades:
+            options = unidade_select.options[:n_unidades]
+        else:
+            options = unidade_select.options
+
+        for option in options:
             nome = option.text
             value = option.get_attribute("value")
             if value == "": continue
@@ -95,7 +101,7 @@ class Scraper:
         curso_select = Select(curso_dropdown)
 
         # checar se já carregou os cursos
-        try: 
+        try:
             WebDriverWait(self.driver, 15).until(
                 lambda driver: len(curso_dropdown.find_elements(By.TAG_NAME, "option")) > 1
             )
@@ -103,7 +109,7 @@ class Scraper:
             print(f"Request de cursos demorou ou a unidade está vazia: {unidade.nome}")
             return True
 
-        # salvar 
+        # salvar
         for option in curso_select.options:
             nome = option.text
             value = option.get_attribute("value")
@@ -128,7 +134,7 @@ class Scraper:
         unidade_select = Select(unidade_dropdown)
         if unidade_select.first_selected_option.text != unidade.nome:
             unidade_select.select_by_visible_text(unidade.nome)
-            try: 
+            try:
                 WebDriverWait(self.driver, 15).until(
                     lambda driver: len(curso_dropdown.find_elements(By.TAG_NAME, "option")) > 1
                 )
@@ -146,7 +152,7 @@ class Scraper:
         grade_link = self.driver.find_element(By.ID, "step4-tab")
         grade_tab = grade_link.find_element(By.XPATH, "..")
         buscar_button.click()
-        try: 
+        try:
             WebDriverWait(self.driver, 15).until(
                 lambda driver: (
                     not "ui-state-disabled" in grade_tab.get_attribute("class") or
@@ -235,16 +241,16 @@ class Scraper:
         processar_disciplinas("obrigatoria", curso.add_disciplina_obrigatoria)
         processar_disciplinas("livre", curso.add_disciplina_optativa_livre)
         processar_disciplinas("eletiva", curso.add_disciplina_optativa_eletiva)
-        
+
         # voltar a página de busca
         buscar_link = self.driver.find_element(By.ID, "step1-tab")
         buscar_link.click()
-        try: 
+        try:
             WebDriverWait(self.driver, 15).until(
                 lambda driver: "ui-state-disabled" in grade_tab.get_attribute("class")
             )
         except Exception as e:
             print(f"Não conseguiu acessar a busca")
             return True
-        
+
         return False
