@@ -10,24 +10,11 @@ import os
 from usp import *
 
 class Scraper:
-    def __init__(self, BASE_URL = "https://uspdigital.usp.br/jupiterweb/jupCarreira.jsp?codmnu=8275", headless = False):
+    def __init__(self, BASE_URL = "https://uspdigital.usp.br/jupiterweb/jupCarreira.jsp?codmnu=8275"):
         self.BASE_URL = BASE_URL
         self.unidades = []
 
         options = Options()
-        if headless:
-            options.add_argument("--headless=new")
-            options.add_argument("--no-sandbox")
-            options.add_argument("--disable-gpu")
-            options.add_argument("--window-size=1920,1080")
-            options.add_argument("--start-maximized")
-            options.add_argument("--disable-setuid-sandbox")
-            options.add_argument("--disable-features=site-per-process")
-            options.add_argument("--disable-blink-features=AutomationControlled")
-            user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            options.add_argument(f"user-agent={user_agent}")
-            options.add_experimental_option("excludeSwitches", ["enable-automation"])
-            options.add_experimental_option('useAutomationExtension', False)
         self.driver = webdriver.Chrome(options=options)
 
     def scrape_tudo(self, n_unidades):

@@ -3,7 +3,7 @@ from usp import *
 from sys import argv
 
 def preencher_dados(n_unidades):
-    scraper = Scraper(headless=True)
+    scraper = Scraper()
     scraper.scrape_tudo(n_unidades)
     lista_dict = [unidade.to_dict() for unidade in scraper.unidades]
     return scraper.unidades
