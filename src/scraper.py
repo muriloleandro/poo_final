@@ -14,8 +14,6 @@ class Scraper:
         self.BASE_URL = BASE_URL
         self.unidades = []
 
-        headless = False;
-
         options = Options()
         if headless:
             options.add_argument("--headless=new")
