@@ -1,33 +1,12 @@
-import json
 from scraper import Scraper
 from usp import *
-from aux import jsonlista2unidades
 from sys import argv
 
 def preencher_dados(n_unidades):
-    resposta = ''
-    while resposta != '1' and resposta != '2':
-        if n_unidades:
-            print(f"1: Fazer scrape de {n_unidades-1} dados no júpiter web")
-        else:
-            print("1: Fazer scrape de todos os dados no júpiter web")
-        print("2: Carregar dados em 'json/USP.json'")
-        resposta = input("Escolha sua opção (1/2): ")
-
-    print()
-
-    if resposta == '1':
-        scraper = Scraper(headless=True)
-        scraper.scrape_tudo(n_unidades)
-        lista_dict = [unidade.to_dict() for unidade in scraper.unidades]
-        with open("json/USP.json", "w", encoding="utf-8") as f:
-            print("Salvando arquivo em 'json/USP.json'")
-            json.dump(lista_dict, f, ensure_ascii=False, indent=4)
-            return scraper.unidades
-
-    else:
-        return jsonlista2unidades("json/USP.json")
-
+    scraper = Scraper(headless=True)
+    scraper.scrape_tudo(n_unidades)
+    lista_dict = [unidade.to_dict() for unidade in scraper.unidades]
+    return scraper.unidades
 
 # 1. Lista de cursos por unidade
 def curso_por_unidade(unidades):

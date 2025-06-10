@@ -5,16 +5,16 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-import json
 import time
 import os
 from usp import *
-from aux import json2unidade
 
 class Scraper:
     def __init__(self, BASE_URL = "https://uspdigital.usp.br/jupiterweb/jupCarreira.jsp?codmnu=8275", headless = False):
         self.BASE_URL = BASE_URL
         self.unidades = []
+
+        headless = False;
 
         options = Options()
         if headless:
@@ -33,28 +33,19 @@ class Scraper:
         self.driver = webdriver.Chrome(options=options)
 
     def scrape_tudo(self, n_unidades):
-        print("Fazendo scraping das unidades...")
+        if n_unidades:
+            print(f"Fazendo scraping de {n_unidades-1} unidades");
+        else:
+            print("Fazendo scraping das unidades...")
         self.scrape_unidades(n_unidades)
 
         for i, unidade in enumerate(self.unidades):
             print(f"Fazendo scraping de: {unidade}")
 
-            if not os.path.exists("json/parts/"):
-                os.makedirs("json/parts/")
-
-            if os.path.exists(f"json/parts/unidade_{i}.json"):
-                print(f"Unidade já processada: json/parts/unidade_{i}.json")
-                json2unidade(f"json/parts/unidade_{i}.json", unidade)
-                continue
-
             err = self.scrape_cursos(unidade)
             while err:
                 print("ERRO!!!! TENTANDO NOVAMENTE...")
                 err = self.scrape_cursos(unidade)
-
-            # salvar como backup
-            with open(f"json/parts/unidade_{i}.json", "w", encoding="utf-8") as f:
-                json.dump(unidade.to_dict(), f, ensure_ascii=False, indent=4)
 
     def acessar_pag_inicial(self):
         self.driver.get(self.BASE_URL)
