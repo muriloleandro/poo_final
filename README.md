@@ -1,4 +1,4 @@
-## WebScraper do júpiterweb
+## WebScraper do Júpiterweb
 
 ### Instalando as bibliotecas
 
@@ -11,11 +11,32 @@ pip install -r requirements.txt
 
 Rode em seu terminal:
 ```shell
-python src/main.py
+python src/main.py [número de unidades desejadas]
 ```
 
-Você poderá escolher entre fazer o scraping de dados, ou usar os dados já obtidos (para evitar gastar seu tempo e internet).
+O número de unidades desejadas na execução é opcional, e caso seja
+omitido, fará com que o programa obtenha as informações de todas as
+unidades.
 
-O scraping de dados salva cada unidade em um arquivo json (`json/parts/unidade_X.json`) para motivos de backup (caso o programa falhe no meio), e posteriormente junta todas um arquivo só (`json/USP.json`). Caso queira refazer o scraping de dados já obtidos, basta apagar os arquivos de unidade.
+Ao executar o programa, o usuário deve esperar enquanto o script
+navega pelo Júpiterweb obtendo as informações de todos os cursos das
+unidades desejadas.
 
-Após obter os dados, você poderá escolher quais operações quer fazer com esses dados.
+Após o script obter os dados, o usuário deve escolher uma das
+seguintes opções de um menu:
+
+1. **Lista de cursos por unidade**: Pede para o usuário escolher uma
+  unidade da USP e exibe todos os cursos dessa unidade.
+2. **Dados de um determinado curso**: Pede para o usuário escolher uma
+  unidade da USP e um curso dessa unidade, e exibe as informações do
+  curso escolhido.
+3. **Dados de todos os cursos**: Exibe imediatamente as informações de
+  todos os cursos obtidos pelo script.
+4. **Dados de uma disciplina (e cursos que a utilizam)**: Pede para o
+  usuário escolher uma unidade da USP e um curso dessa unidade, e
+  exibe as informações de uma disciplina, exibindo também os cursos
+  obtidos pelo script nos quais essa disciplina está presente na grade.
+5. **Disciplinas que aparecem em mais de um curso**: Exibe
+  imediatamente a lista de todas as disciplinas que estão presentes na
+  grade de mais de um dos cursos obtidos pelo script.
+6. **Sair**: Fecha o programa
