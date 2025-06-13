@@ -1,5 +1,10 @@
 ## WebScraper do Júpiterweb
 
+**Grupo**:
+ - Glauco Fleury Correa de Moraes - 15456302
+ - Murilo Leandro Garcia - 15480943
+ - Vitor Daniel de Resende - 15554396
+
 ### Instalando as bibliotecas
 
 Rode em seu terminal:
